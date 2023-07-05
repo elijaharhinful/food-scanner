@@ -99,8 +99,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 5rem 1rem 1rem 1rem;
+    margin-bottom: 1.5rem;
   }
+
+  .loser .smiley{
+    text-align: center;
+  }
+
+  .loser .smiley img{
+    width: 70%;
+  }
+
   .loser .text {
     text-align: center;
   }
@@ -122,20 +131,28 @@ body {
     background-color: rgb(198, 10, 10);
     width: 100%;
   }
-  
-  form button {
-    color: white;
-    font-size: 1rem;
-    border: 0.5rem white;
-  }
 
   .lose .notice {
-    display: flex;
-    flex-direction: row;
     color: white;
-    width: 100%;
-    background-color: rgb(198, 10, 10);
+    justify-content: center;
   }
+
+  .lose .notice .danger{
+    width: 15%;
+  }
+
+  .lose .notice .danger img{
+    width: 100%;
+  }
+  .notice .text{
+    width: 60%;
+    align-content: center;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* loser styles ends here */
+
 
   .early {
     padding: 5rem 1rem;
