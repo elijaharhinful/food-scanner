@@ -17,7 +17,7 @@ body {
     justify-content: center;
   }
   .win {
-    padding: 5rem 1rem;
+    padding: 1rem;
   }
 
   .winner {
@@ -26,6 +26,14 @@ body {
     justify-content: center;
     align-items: center;
   }
+
+  .winner .star{
+    text-align: center;
+  }
+  .winner img{
+    width: 70%;
+  }
+
   .winner .text {
     text-align: center;
   }
@@ -70,6 +78,19 @@ body {
     flex-direction: row;
     color: rgb(172, 11, 11);
     font-size: 0.8rem;
+  }
+
+  .notice .danger{
+    width: 15%;
+  }
+
+  .notice .danger img{
+    width: 100%;
+  }
+  .notice .text{
+    width: 85%;
+    padding: 1rem 0;
+    align-content: center;
   }
 
   /* lose page styles */
