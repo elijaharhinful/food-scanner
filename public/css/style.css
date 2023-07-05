@@ -27,10 +27,10 @@ body {
     align-items: center;
   }
 
-  .winner .star{
+  .winner .star {
     text-align: center;
   }
-  .winner img{
+  .winner img {
     width: 70%;
   }
 
@@ -80,14 +80,14 @@ body {
     font-size: 0.8rem;
   }
 
-  .notice .danger{
+  .notice .danger {
     width: 15%;
   }
 
-  .notice .danger img{
+  .notice .danger img {
     width: 100%;
   }
-  .notice .text{
+  .notice .text {
     width: 85%;
     padding: 1rem 0;
     align-content: center;
@@ -102,11 +102,11 @@ body {
     margin-bottom: 1.5rem;
   }
 
-  .loser .smiley{
+  .loser .smiley {
     text-align: center;
   }
 
-  .loser .smiley img{
+  .loser .smiley img {
     width: 70%;
   }
 
@@ -137,14 +137,14 @@ body {
     justify-content: center;
   }
 
-  .lose .notice .danger{
+  .lose .notice .danger {
     width: 15%;
   }
 
-  .lose .notice .danger img{
+  .lose .notice .danger img {
     width: 100%;
   }
-  .notice .text{
+  .notice .text {
     width: 60%;
     align-content: center;
     font-size: 1rem;
@@ -153,25 +153,35 @@ body {
 
   /* loser styles ends here */
 
-
+  /* early styles begins here */
   .early {
-    padding: 5rem 1rem;
     text-align: center;
+    margin-top: 3rem;
   }
 
-  .early h1{
+  .early .padlock img{
+    width: 70%;
+  }
+
+  .early h1 {
     color: red;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     margin: 2rem 0 3rem 0;
   }
 
-  .early h2{
+  .early h2 {
     color: red;
+    font-size: 2rem;
   }
 
-  .early h4{
+  .early h3{
+    font-size: 1.5rem;
+  }
+
+  .early h4 {
     color: green;
     margin-top: 5rem;
+    font-size: 1.3rem;
   }
 
   .scan {
@@ -179,39 +189,20 @@ body {
     text-align: center;
   }
 
-  .scan h1{
+  .scan h1 {
     color: red;
     font-size: 2.5rem;
     margin: 1rem 0 1rem 0;
   }
 
-  .scan .ad{
+  .scan .ad {
     margin: 1.8rem 0;
   }
 
-  .scan .timer h4{
+  .scan .timer h4 {
     color: green;
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   footer {
     position: absolute;
     bottom: 0;
