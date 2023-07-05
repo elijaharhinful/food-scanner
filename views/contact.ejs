@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head'); %>
+
+  <body>
+    <main>
+      <h1>Fill this form</h1>
+      <form method="post" action="">
+        <div class="firstname">
+          <input type="text" name="firstname" placeholder="Firstname" required>
+        </div>
+        <div class="lastname">
+          <input type="text" name="Lastname" placeholder="Lastname" required>
+        </div>
+        <div class="contact">
+          <input type="tel" name="contact" placeholder="Phone Number" required>
+        </div>
+        <div class="submit">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </main>
+    <%- include('layouts/footer'); %>
+  </body>
+
+</html>

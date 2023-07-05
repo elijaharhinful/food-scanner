@@ -1,0 +1,185 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+body {
+  font: 1rem "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .win {
+    padding: 5rem 1rem;
+  }
+
+  .winner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .winner .text {
+    text-align: center;
+  }
+
+  .winner .text h1 {
+    margin-bottom: 0.6rem;
+  }
+  .winner .text h3 {
+    color: rgb(1, 85, 26);
+  }
+  form {
+    padding: 1rem 2rem;
+    text-align: center;
+  }
+
+  form input {
+    border: 0.05rem solid rgb(0, 0, 0);
+    padding: 1rem;
+    margin: 0.7rem;
+    border-radius: 0.4rem;
+    background-color: rgb(210, 210, 210);
+  }
+
+  form input::placeholder {
+    text-align: center;
+    font-size: 1rem;
+    color: rgb(47, 47, 47);
+  }
+
+  form button {
+    border-style: none;
+    border-radius: 0.4rem;
+    margin: 0.7rem;
+    padding: 0.4rem 1.5rem;
+    background-color: rgb(1, 85, 26);
+    color: white;
+    font-size: 1rem;
+  }
+
+  .notice {
+    display: flex;
+    flex-direction: row;
+    color: rgb(172, 11, 11);
+    font-size: 0.8rem;
+  }
+
+  /* lose page styles */
+  .loser {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem 1rem 1rem 1rem;
+  }
+  .loser .text {
+    text-align: center;
+  }
+
+  .loser .text h1 {
+    margin-bottom: 0.6rem;
+    color: rgb(207, 5, 5);
+  }
+
+  .loser .text h3 {
+    color: rgb(3, 129, 3);
+    margin: 0.8rem;
+  }
+  .loser .text h3 span {
+    color: rgb(198, 10, 10);
+  }
+
+  .lose .contact {
+    background-color: rgb(198, 10, 10);
+    width: 100%;
+  }
+  
+  form button {
+    color: white;
+    font-size: 1rem;
+    border: 0.5rem white;
+  }
+
+  .lose .notice {
+    display: flex;
+    flex-direction: row;
+    color: white;
+    width: 100%;
+    background-color: rgb(198, 10, 10);
+  }
+
+  .early {
+    padding: 5rem 1rem;
+    text-align: center;
+  }
+
+  .early h1{
+    color: red;
+    font-size: 2.5rem;
+    margin: 2rem 0 3rem 0;
+  }
+
+  .early h2{
+    color: red;
+  }
+
+  .early h4{
+    color: green;
+    margin-top: 5rem;
+  }
+
+  .scan {
+    padding: 5rem 1rem;
+    text-align: center;
+  }
+
+  .scan h1{
+    color: red;
+    font-size: 2.5rem;
+    margin: 1rem 0 1rem 0;
+  }
+
+  .scan .ad{
+    margin: 1.8rem 0;
+  }
+
+  .scan .timer h4{
+    color: green;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  footer {
+    position: absolute;
+    bottom: 0;
+    color: white;
+    background-color: black;
+    padding: 3rem;
+    font-size: 1rem;
+  }
+}
