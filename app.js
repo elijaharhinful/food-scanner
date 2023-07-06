@@ -1,9 +1,11 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mysql = require('mysql');
+const session = require('express-session');
 
 //set routes
 var pagesRouter = require('./routes/pages');

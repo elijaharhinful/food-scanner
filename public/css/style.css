@@ -1,9 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  list-style: none;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 body {
   font: 1rem "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -16,22 +14,21 @@ body {
     align-items: center;
     justify-content: center;
   }
-  .win {
-    padding: 1rem;
-  }
+ /* win page style begins here */
 
   .winner {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 0.5rem;
   }
 
   .winner .star {
     text-align: center;
   }
   .winner img {
-    width: 70%;
+    width: 50%;
   }
 
   .winner .text {
@@ -45,14 +42,13 @@ body {
     color: rgb(1, 85, 26);
   }
   form {
-    padding: 1rem 2rem;
     text-align: center;
   }
 
   form input {
     border: 0.05rem solid rgb(0, 0, 0);
     padding: 1rem;
-    margin: 0.7rem;
+    margin: 0.5rem;
     border-radius: 0.4rem;
     background-color: rgb(210, 210, 210);
   }
@@ -66,7 +62,7 @@ body {
   form button {
     border-style: none;
     border-radius: 0.4rem;
-    margin: 0.7rem;
+    margin: 0.5rem;
     padding: 0.4rem 1.5rem;
     background-color: rgb(1, 85, 26);
     color: white;
@@ -78,6 +74,8 @@ body {
     flex-direction: row;
     color: rgb(172, 11, 11);
     font-size: 0.8rem;
+    align-items: center;
+    justify-content: center;
   }
 
   .notice .danger {
@@ -87,19 +85,21 @@ body {
   .notice .danger img {
     width: 100%;
   }
-  .notice .text {
+  .win .notice .text {
+    margin: 1rem 0;
     width: 85%;
-    padding: 1rem 0;
-    align-content: center;
   }
 
-  /* lose page styles */
+  /* lose page styles begins here*/
+  .lose{
+    margin-top: 1.7rem;
+  }
   .loser {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0rem;
   }
 
   .loser .smiley {
@@ -107,7 +107,7 @@ body {
   }
 
   .loser .smiley img {
-    width: 70%;
+    width: 50%;
   }
 
   .loser .text {
@@ -115,7 +115,7 @@ body {
   }
 
   .loser .text h1 {
-    margin-bottom: 0.6rem;
+    margin: 1.2rem;
     color: rgb(207, 5, 5);
   }
 
@@ -125,7 +125,7 @@ body {
 
   .loser .text h3 {
     color: rgb(3, 129, 3);
-    margin: 0.8rem;
+    margin: 0.9rem;
   }
   .loser .text h3 span {
     color: rgb(198, 10, 10);
@@ -134,25 +134,19 @@ body {
   .lose .contact {
     background-color: rgb(198, 10, 10);
     width: 100%;
+    padding-top: 1rem;
+    position: absolute;
+    bottom: 0;
   }
 
   .lose .notice {
     color: white;
-    justify-content: center;
+    margin-bottom: 1rem;
   }
 
-  .lose .notice .danger {
-    width: 15%;
-  }
-
-  .lose .notice .danger img {
-    width: 100%;
-  }
-  .notice .text {
-    width: 60%;
-    align-content: center;
+  .lose .notice .text {
+    width: 70%;
     font-size: 1rem;
-    margin-bottom: 2rem;
   }
   /* loser styles ends here */
 
@@ -160,17 +154,17 @@ body {
   /* early styles begins here */
   .early {
     text-align: center;
-    margin-top: 3rem;
+    margin-top: 2.5rem;
   }
 
   .early .padlock img{
-    width: 70%;
+    width: 60%;
   }
 
   .early h1 {
     color: red;
     font-size: 2.8rem;
-    margin: 2rem 0 3rem 0;
+    margin: 1.3rem 0 2rem 0;
   }
 
   .early h2 {
@@ -184,10 +178,11 @@ body {
 
   .early h4 {
     color: green;
-    margin-top: 5rem;
+    margin-top: 3.5rem;
     font-size: 1.3rem;
   }
 
+  /* scan page style begins here */
   .scan {
     padding: 5rem 1rem;
     text-align: center;
