@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head'); %>
+
+  <body>
+    <main class="confirm">
+      <div class="checkmark"><img src="/images/green_checkmark.png" alt="golden star"></div>
+      <div class="text">
+        <h1>Thank You!</h1> <br>
+        <h3>Your details have been sumbmitted successfully</h3>
+        <br>
+        <h3 class="h3">You have <%= credit %> credits!</h3>
+        <h3 class="h3">Continue scanning to earn more credits</h3>
+      </div>
+      <div>
+        <form method="post" action="/users/confirm"><button type="submit">OK</button></form>
+      </div>
+
+    </main>
+
+  </body>
+
+</html>

@@ -14,8 +14,7 @@ body {
     align-items: center;
     justify-content: center;
   }
- /* win page style begins here */
-
+  /* win page style begins here */
   .winner {
     display: flex;
     flex-direction: column;
@@ -89,9 +88,45 @@ body {
     margin: 1rem 0;
     width: 85%;
   }
+  /* win page style ends here */
+
+  /* confirm page style starts here */
+  .confirm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    padding: 5rem 0;
+  }
+
+  .checkmark {
+    width: 40%;
+  }
+  .checkmark img {
+    width: 100%;
+  }
+  .confirm .text {
+    margin: 1rem 0;
+  }
+  .confirm .text .h3{
+    color: red;
+  }
+
+  .confirm button{
+    color: white;
+    background-color: rgb(17, 212, 17);
+    border-style: none;
+    width: 5rem;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+  }
+  /* confirm page style ends here */
 
   /* lose page styles begins here*/
-  .lose{
+  .lose {
     margin-top: 1.7rem;
   }
   .loser {
@@ -120,7 +155,7 @@ body {
     color: rgb(207, 5, 5);
   }
 
-  .loser .text h3 img{
+  .loser .text h3 img {
     width: 6%;
   }
 
@@ -151,14 +186,13 @@ body {
   }
   /* loser styles ends here */
 
-
   /* early styles begins here */
   .early {
     text-align: center;
     margin-top: 2.5rem;
   }
 
-  .early .padlock img{
+  .early .padlock img {
     width: 60%;
   }
 
@@ -173,7 +207,7 @@ body {
     font-size: 2rem;
   }
 
-  .early h3{
+  .early h3 {
     font-size: 1.5rem;
   }
 
@@ -183,7 +217,6 @@ body {
     font-size: 1.3rem;
   }
   /* early page style ends here */
-
 
   /* scan page style begins here */
   .scan {

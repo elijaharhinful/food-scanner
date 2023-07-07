@@ -5,6 +5,10 @@ var router = express.Router();
 router.get('/', (req, res, next)=> {
   res.render('index', { title: 'Ad Homepage' });
 });
+router.get('/index', (req, res, next)=> {
+  res.render('index', { title: 'Ad Homepage' });
+});
+
 
 // GET win page
 router.get('/win', (req,res,next)=>{
@@ -27,6 +31,11 @@ router.get('/lose', (req,res,next)=>{
 // GET early page
 router.get('/early', (req,res,next)=>{
   res.render('early', {title: 'Early'})
+});
+
+//GET confirm page
+router.get('/confirm',(req,res,next)=>{
+  res.render('confirm',{title:"OK", credit: 0})
 });
 
 module.exports = router;
