@@ -29,6 +29,33 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", pagesRouter);
 app.use("/users", usersRouter);
 
+// Express Session middleware
+// if (process.env.NODE_ENV === "development"){
+//   app.use(session({
+//     secret: process.env.SESS_KEY,
+//     resave: true,
+//     saveUninitialized: true,
+//     store: MongoStore.create({
+//       mongoUrl: config.database,
+//       ttl: 5 * 24 * 60 * 60 // = 5 days.
+//     })
+//     //  cookie: { secure: true }
+//   }));
+// }else if (process.env.NODE_ENV === "production"){
+//   app.set('trust proxy', 1); // trust first proxy
+//   app.use(session({
+//     secret: process.env.SESS_KEY,
+//     resave: true,
+//     saveUninitialized: true,
+//     cookie: { secure: true },
+//     store: MongoStore.create({
+//       mongoUrl: process.env.MONGODB_URL,
+//       ttl: 1 * 24 * 60 * 60 // = 1 day.
+//     })
+//   }));
+// }
+
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

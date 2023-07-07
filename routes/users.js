@@ -36,6 +36,7 @@ router.post("/lose", (req, res, next) => {
   let surname = req.body.surname;
   let number = req.body.number;
   let credit = 10;
+  let food_wins = 0;
 
   let fullname = firstname + " " + surname;
 
@@ -43,7 +44,7 @@ router.post("/lose", (req, res, next) => {
     if (err) throw err;
 
     let get_query = "SELECT * FROM losers WHERE name = ? AND number = ?";
-    let post_query = "INSERT INTO  losers VALUES (0,?,?,0)";
+    let post_query = "INSERT INTO  losers VALUES (0,?,?,0,0)";
     let post_credit_query = "UPDATE losers SET credit = ? WHERE id = ? AND name = ?"
     let post_foodwins_query = "UPDATE losers SET food_wins = ? , credit = ? WHERE id = ? AND name = ?"
 
@@ -51,10 +52,10 @@ router.post("/lose", (req, res, next) => {
       get_query,
       [fullname, number],
       async (err, result) => {
-        if (result == null || result == []) {
+        if (result === null || result.length === 0) {
           await connection.query(
             post_query,
-            [fullname, number, credit],
+            [fullname, number, credit,food_wins],
             (err, result) => {
               connection.release();
               if (err) throw err;
@@ -62,8 +63,9 @@ router.post("/lose", (req, res, next) => {
             }
           );
         } else if (result[0].credit == 50) {
+          
           console.log("you qualify for a free meal as you have 50 credits");
-          let food_wins = result[0].food_wins + 1;
+          food_wins = result[0].food_wins + 1;
           let updated_credit = result[0].credit - 50;
           
           await connection.query(post_foodwins_query,[food_wins,updated_credit,result[0].id,result[0].name],(err)=>{
