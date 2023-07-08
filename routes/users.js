@@ -67,6 +67,7 @@ router.post("/lose", (req, res, next) => {
   const CREDIT_LIMIT = 50;
   const INITIAL_CREDIT = 10;
   const INITIAL_FOOD_WINS = 0;
+  const INITIAL_DIRECT_FOOD_WINS = 0;
 
   const { firstname, surname, number } = req.body;
   const fullname = `${firstname} ${surname}`;
@@ -76,7 +77,7 @@ router.post("/lose", (req, res, next) => {
       if (err) throw err;
 
       const getQuery = "SELECT * FROM users WHERE name = ? AND number = ?";
-      const postQuery = "INSERT INTO users VALUES (0,?,?,0,0)";
+      const postQuery = "INSERT INTO users VALUES (0,?,?,0,0,0)";
       const postCreditQuery =
         "UPDATE users SET credit = ? WHERE id = ? AND name = ?";
       const postFoodWinsQuery =
@@ -89,7 +90,7 @@ router.post("/lose", (req, res, next) => {
           if (result === null || result.length === 0) {
             await connection.query(
               postQuery,
-              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS],
+              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS,INITIAL_DIRECT_FOOD_WINS],
               (err, result) => {
                 if (err) throw err;
                 connection.release();
