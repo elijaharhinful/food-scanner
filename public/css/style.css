@@ -108,20 +108,29 @@ body {
     width: 100%;
   }
   .confirm .text {
-    margin: 1rem 0;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .confirm .text .h3{
     color: red;
   }
 
-  .confirm button{
-    color: white;
+  .confirm .button{
+    text-decoration: none;
     background-color: rgb(17, 212, 17);
-    border-style: none;
-    width: 5rem;
     padding: 1rem;
     border-radius: 0.3rem;
-    font-size: 1rem;
+    width: 80%;
+    
+  }
+
+  .confirm .btn{
+    text-decoration: none;
+    color: white;
+    font-size: 1.3rem;
   }
   /* confirm page style ends here */
 

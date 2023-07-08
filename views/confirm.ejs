@@ -7,14 +7,28 @@
       <div class="checkmark"><img src="/images/green_checkmark.png" alt="golden star"></div>
       <div class="text">
         <h1>Thank You!</h1> <br>
-        <h3>Your details have been sumbmitted successfully</h3>
+        <h3>Your details have been submitted successfully</h3>
         <br>
-        <h3 class="h3">You have <%= credit %> credits!</h3>
-        <h3 class="h3">Continue scanning to earn more credits</h3>
+        <% if (credit===50){ %>
+          <h3 class="h3">You qualify for a free meal because you have 50 credits</h3>
+          <br>
+          <div class="button">
+            <a class="btn" href="/win">Claim your meal</a></form>
+          </div>
+          <%}else if (credit===0){%>
+            <div class="button">
+              <a class="btn" href="/">OK</a>
+            </div>
+            <% } else{ %>
+              <h3 class="h3">You have <%= credit %> credits!</h3>
+              <h3 class="h3">Continue scanning to earn more credits</h3>
+              <br>
+              <div class="button">
+                <a class="btn" href="/">OK</a>
+              </div>
+              <%} %>
       </div>
-      <div>
-        <form method="post" action="/users/confirm"><button type="submit">OK</button></form>
-      </div>
+
 
     </main>
 

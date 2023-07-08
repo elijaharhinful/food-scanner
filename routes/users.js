@@ -10,91 +10,133 @@ router.get("/", function (req, res, next) {
 
 // POST win form
 router.post("/win", (req, res, next) => {
-  let firstname = req.body.firstname;
-  let surname = req.body.surname;
-  let number = req.body.number;
+  const INITIAL_CREDIT = 0;
+  const INITIAL_FOOD_WINS = 0;
+  const INITIAL_DIRECT_FOOD_WINS = 1;
 
-  let fullname = firstname + " " + surname;
+  const { firstname, surname, number } = req.body;
+  const fullname = `${firstname} ${surname}`;
 
-  db.getConnection(async (err, connection) => {
-    if (err) throw err;
-
-    let query = "INSERT INTO  winners VALUES (0,?,?)";
-
-    await connection.query(query, [fullname, number], (err, result) => {
-      connection.release();
+  try {
+    db.getConnection(async (err, connection) => {
       if (err) throw err;
-      console.log("details added");
-      res.redirect("/confirm");
+
+      const getQuery = "SELECT * FROM users WHERE name = ? AND number = ?";
+      const postQuery = "INSERT INTO users VALUES (0,?,?,0,0,0)";
+      const postFoodWinsDirectQuery =
+        "UPDATE users SET food_wins_direct = ? WHERE id = ? AND name = ?";
+
+      await connection.query(
+        getQuery,
+        [fullname, number],
+        async (err, result) => {
+          if (result === null || result.length === 0) {
+            await connection.query(
+              postQuery,
+              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS,INITIAL_DIRECT_FOOD_WINS],
+              (err, result) => {
+                if (err) throw err;
+                connection.release();
+                res.redirect("/confirm");
+              }
+            );
+          } else {
+            const foodWinsDirect = result[0].food_wins_direct + 1;
+
+            await connection.query(
+              postFoodWinsDirectQuery,
+              [foodWinsDirect, result[0].id, result[0].name],
+              (err) => {
+                if (err) throw err;
+                connection.release();
+                res.redirect("/confirm");
+              }
+            );
+          }
+        }
+      );
     });
-  });
+  } catch (err) {
+    next(err);
+  }
+  
 });
 
 // POST lose form
 router.post("/lose", (req, res, next) => {
-  let firstname = req.body.firstname;
-  let surname = req.body.surname;
-  let number = req.body.number;
-  let credit = 10;
-  let food_wins = 0;
+  const CREDIT_LIMIT = 50;
+  const INITIAL_CREDIT = 10;
+  const INITIAL_FOOD_WINS = 0;
 
-  let fullname = firstname + " " + surname;
+  const { firstname, surname, number } = req.body;
+  const fullname = `${firstname} ${surname}`;
 
-  db.getConnection(async (err, connection) => {
-    if (err) throw err;
+  try {
+    db.getConnection(async (err, connection) => {
+      if (err) throw err;
 
-    let get_query = "SELECT * FROM losers WHERE name = ? AND number = ?";
-    let post_query = "INSERT INTO  losers VALUES (0,?,?,0,0)";
-    let post_credit_query = "UPDATE losers SET credit = ? WHERE id = ? AND name = ?"
-    let post_foodwins_query = "UPDATE losers SET food_wins = ? , credit = ? WHERE id = ? AND name = ?"
+      const getQuery = "SELECT * FROM users WHERE name = ? AND number = ?";
+      const postQuery = "INSERT INTO users VALUES (0,?,?,0,0)";
+      const postCreditQuery =
+        "UPDATE users SET credit = ? WHERE id = ? AND name = ?";
+      const postFoodWinsQuery =
+        "UPDATE users SET food_wins = ?, credit = ? WHERE id = ? AND name = ?";
 
-    await connection.query(
-      get_query,
-      [fullname, number],
-      async (err, result) => {
-        if (result === null || result.length === 0) {
-          await connection.query(
-            post_query,
-            [fullname, number, credit,food_wins],
-            (err, result) => {
-              connection.release();
-              if (err) throw err;
-              res.redirect("/confirm");
-            }
-          );
-        } else if (result[0].credit == 50) {
-          
-          console.log("you qualify for a free meal as you have 50 credits");
-          food_wins = result[0].food_wins + 1;
-          let updated_credit = result[0].credit - 50;
-          
-          await connection.query(post_foodwins_query,[food_wins,updated_credit,result[0].id,result[0].name],(err)=>{
-            if (err) throw err;
-            connection.release();
-            res.redirect("/confirm");
-          })
-        } else {
-          let updated_credit = result[0].credit + 10;
-          
-          await connection.query(post_credit_query,[updated_credit,result[0].id,result[0].name],(err)=>{
-            if (err) throw err;
-            connection.release();
-            res.render("confirm",{
-              title: "OK",
-              credit: updated_credit,
-            });
-          })
-          
+      await connection.query(
+        getQuery,
+        [fullname, number],
+        async (err, result) => {
+          if (result === null || result.length === 0) {
+            await connection.query(
+              postQuery,
+              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS],
+              (err, result) => {
+                if (err) throw err;
+                connection.release();
+                res.render("confirm", {
+                  title: "OK",
+                  credit: INITIAL_CREDIT,
+                });
+              }
+            );
+          } else if (result[0].credit == CREDIT_LIMIT) {
+            const foodWins = result[0].food_wins + 1;
+            const updatedCredit = result[0].credit - CREDIT_LIMIT;
+
+            await connection.query(
+              postFoodWinsQuery,
+              [foodWins, updatedCredit, result[0].id, result[0].name],
+              (err) => {
+                if (err) throw err;
+                connection.release();
+                res.render("confirm", {
+                  title: "OK",
+                  credit: CREDIT_LIMIT,
+                });
+              }
+            );
+          } else {
+            const updatedCredit = result[0].credit + INITIAL_CREDIT;
+
+            await connection.query(
+              postCreditQuery,
+              [updatedCredit, result[0].id, result[0].name],
+              (err) => {
+                if (err) throw err;
+                connection.release();
+                res.render("confirm", {
+                  title: "OK",
+                  credit: updatedCredit,
+                });
+              }
+            );
+          }
         }
-      }
-    );
-  });
-});
-
-
-//to load ad page after clicking ok on confirm page
-router.post("/confirm", (req, res, next) => {
-  res.redirect("../index");
+      );
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
