@@ -5,7 +5,6 @@ const cron = require("node-cron");
 
 const { DateTime, Duration } = require("luxon");
 const voucher = require("voucher-code-generator");
-const { connection } = require("mongoose");
 
 // router.get("/:coupon", (req, res, next) => {
 //   let coupon = req.params.coupon;
