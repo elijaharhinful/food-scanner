@@ -6,14 +6,11 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mysql = require("mysql");
 const session = require("express-session");
+const passport = require("passport");
+const MySqlStore = require("express-mysql-session")(session);
 const database_config = require("./config/database");
 
-//set routes
-var pagesRouter = require("./routes/pages");
-var usersRouter = require("./routes/users");
-
 var app = express();
-
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -25,40 +22,61 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Express Session middleware
+const options = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+}
+
+const sessionConnection = mysql.createConnection(options);
+const sessionStore = new MySqlStore({
+  expiration: 1800000, // 30 minutes]
+  clearExpired: true,
+  createDatabaseTable: true,
+  schema: {
+    tableName: "sessions",
+    columnNames: {
+      session_id: "session_id",
+      expires: "expires",
+      data: "data",
+    },
+  }
+}, sessionConnection);
+
+if (process.env.NODE_ENV === "development"){
+  app.use(session({
+    secret: process.env.SESS_KEY,
+    resave: true,
+    saveUninitialized: true,
+    store: sessionStore,
+  }));
+}else if (process.env.NODE_ENV === "production"){
+  app.set('trust proxy', 1); // trust first proxy
+  app.use(session({
+    secret: process.env.SESS_KEY,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: true },
+    store: sessionStore,
+  }));
+}
+
+//set routes
+var pagesRouter = require("./routes/pages");
+var usersRouter = require("./routes/users");
+
 //routing or using routes set above
 app.use("/", pagesRouter);
 app.use("/users", usersRouter);
 
-// Express Session middleware
-// if (process.env.NODE_ENV === "development"){
-//   app.use(session({
-//     secret: process.env.SESS_KEY,
-//     resave: true,
-//     saveUninitialized: true,
-//     store: MongoStore.create({
-//       mongoUrl: config.database,
-//       ttl: 5 * 24 * 60 * 60 // = 5 days.
-//     })
-//     //  cookie: { secure: true }
-//   }));
-// }else if (process.env.NODE_ENV === "production"){
-//   app.set('trust proxy', 1); // trust first proxy
-//   app.use(session({
-//     secret: process.env.SESS_KEY,
-//     resave: true,
-//     saveUninitialized: true,
-//     cookie: { secure: true },
-//     store: MongoStore.create({
-//       mongoUrl: process.env.MONGODB_URL,
-//       ttl: 1 * 24 * 60 * 60 // = 1 day.
-//     })
-//   }));
-// }
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.status(404);
+  res.render("404",{title:"404 error"});
 });
 
 // error handler

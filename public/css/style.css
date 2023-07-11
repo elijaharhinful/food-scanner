@@ -14,6 +14,25 @@ body {
     align-items: center;
     justify-content: center;
   }
+
+  /* ad page style starts here */
+  .scan .button{
+    text-decoration: none;
+    background-color: rgb(17, 212, 17);
+    padding: 1rem;
+    border-radius: 0.3rem;
+    width: 80%;
+  }
+
+  .scan .btn{
+    text-decoration: none;
+    color: white;
+    font-size: 1.3rem;
+    display: block;
+  }
+  /* ad page style ends here */
+
+
   /* win page style begins here */
   .winner {
     display: flex;
@@ -124,13 +143,13 @@ body {
     padding: 1rem;
     border-radius: 0.3rem;
     width: 80%;
-    
   }
 
   .confirm .btn{
     text-decoration: none;
     color: white;
     font-size: 1.3rem;
+    display: block;
   }
   /* confirm page style ends here */
 

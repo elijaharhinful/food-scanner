@@ -3,6 +3,8 @@ var router = express.Router();
 const mysql = require("mysql");
 const db = require("../config/database");
 
+const { DateTime } = require("luxon");
+
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
@@ -13,6 +15,7 @@ router.post("/win", (req, res, next) => {
   const INITIAL_CREDIT = 0;
   const INITIAL_FOOD_WINS = 0;
   const INITIAL_DIRECT_FOOD_WINS = 1;
+  const coupon = req.session.coupon;
 
   const { firstname, surname, number } = req.body;
   const fullname = `${firstname} ${surname}`;
@@ -25,6 +28,9 @@ router.post("/win", (req, res, next) => {
       const postQuery = "INSERT INTO users VALUES (0,?,?,0,0,0)";
       const postFoodWinsDirectQuery =
         "UPDATE users SET food_wins_direct = ? WHERE id = ? AND name = ?";
+      const getCouponQuery = "SELECT * FROM coupons WHERE coupon = ?";
+      updateCouponQuery =
+        "UPDATE coupons SET isRedeemed = ? WHERE coupon = ?";
 
       await connection.query(
         getQuery,
@@ -33,11 +39,39 @@ router.post("/win", (req, res, next) => {
           if (result === null || result.length === 0) {
             await connection.query(
               postQuery,
-              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS,INITIAL_DIRECT_FOOD_WINS],
+              [
+                fullname,
+                number,
+                INITIAL_CREDIT,
+                INITIAL_FOOD_WINS,
+                INITIAL_DIRECT_FOOD_WINS,
+              ],
               (err, result) => {
                 if (err) throw err;
-                connection.release();
-                res.redirect("/confirm");
+
+                connection.query(
+                  getCouponQuery,
+                  [coupon],
+                  async (err, result) => {
+                    if (err) throw err;
+                    if (result === null || result.length === 0) {
+                      res.redirect("/absent");
+                    } else {
+                      console.log(result);
+                      const isRedeemed = "true"
+                      await connection.query(
+                        updateCouponQuery,
+                        [isRedeemed, coupon],
+                        (err) => {
+                          if (err) throw err;
+
+                          connection.release();
+                          res.redirect("/confirm");
+                        }
+                      );
+                    }
+                  }
+                );
               }
             );
           } else {
@@ -48,8 +82,29 @@ router.post("/win", (req, res, next) => {
               [foodWinsDirect, result[0].id, result[0].name],
               (err) => {
                 if (err) throw err;
-                connection.release();
-                res.redirect("/confirm");
+                connection.query(
+                  getCouponQuery,
+                  [coupon],
+                  async (err, result) => {
+                    if (err) throw err;
+                    if (result === null || result.length === 0) {
+                      res.redirect("/absent");
+                    } else {
+                      console.log(result);
+                      const isRedeemed = "true"
+                      await connection.query(
+                        updateCouponQuery,
+                        [isRedeemed, coupon],
+                        (err) => {
+                          if (err) throw err;
+
+                          connection.release();
+                          res.redirect("/confirm");
+                        }
+                      );
+                    }
+                  }
+                );
               }
             );
           }
@@ -59,7 +114,6 @@ router.post("/win", (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  
 });
 
 // POST lose form
@@ -90,7 +144,13 @@ router.post("/lose", (req, res, next) => {
           if (result === null || result.length === 0) {
             await connection.query(
               postQuery,
-              [fullname, number, INITIAL_CREDIT, INITIAL_FOOD_WINS,INITIAL_DIRECT_FOOD_WINS],
+              [
+                fullname,
+                number,
+                INITIAL_CREDIT,
+                INITIAL_FOOD_WINS,
+                INITIAL_DIRECT_FOOD_WINS,
+              ],
               (err, result) => {
                 if (err) throw err;
                 connection.release();
@@ -134,6 +194,50 @@ router.post("/lose", (req, res, next) => {
           }
         }
       );
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/close", (req, res, next) => {
+  let time = DateTime.now();
+  let closeTime = time.toISO();
+  let coupon = req.session.coupon;
+
+  try {
+    const postQuery = "INSERT INTO times VALUES (0,?,?)";
+    const countQuery =
+      "SELECT COUNT(*) AS count FROM times WHERE coupon = ? AND ad_time < ?";
+
+    db.getConnection(async (err, connection) => {
+      if (err) throw err;
+
+      await connection.query(
+        countQuery,
+        [coupon, closeTime],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+            res.sendStatus(500);
+          } else {
+            console.log(results);
+            const count = results[0].count;
+
+            // Determine the comparison result (win or lose)
+            if (count === 0) {
+              connection.query(postQuery, [coupon, closeTime], (err) => {
+                if (err) throw err;
+                res.redirect("/win");
+              });
+            } else {
+              res.redirect("/lose");
+            }
+          }
+        }
+      );
+
+      // Perform the comparison with the database
     });
   } catch (err) {
     next(err);
