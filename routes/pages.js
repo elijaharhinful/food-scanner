@@ -6,94 +6,46 @@ const cron = require("node-cron");
 const { DateTime, Duration } = require("luxon");
 const voucher = require("voucher-code-generator");
 
-// router.get("/:coupon", (req, res, next) => {
-//   let coupon = req.params.coupon;
-
-//   try {
-//     getQuery = "SELECT * FROM coupons WHERE coupon = ?";
-//     postQuery = "UPDATE coupons SET scans = ? WHERE coupon = ?";
-
-//     if (coupon.length !== 6) {
-//       res.redirect("/absent");
-//     } else {
-//       db.getConnection(async (err, connection) => {
-//         if (err) throw err;
-//         await connection.query(getQuery, [coupon], async (err, result) => {
-//           if (result === null || result.length === 0) {
-//             res.redirect("/absent");
-//             connection.release();
-//           } else {
-//             if (result[0].coupon && result[0].isExpired === "false") {
-//               if (result[0].scans <= 5) {
-//                 let scans = result[0].scans + 1;
-//                 await connection.query(
-//                   postQuery,
-//                   [scans, coupon],
-//                   (err, result) => {
-//                     if (err) throw err;
-//                     if (typeof req.session.coupon == "undefined"){
-//                       req.session.coupon = [];
-//                       req.session.coupon = coupon;
-//                     } else {
-//                       req.session.coupon = coupon;
-//                     }
-
-//                     res.redirect("/ad");
-//                     connection.release();
-//                   }
-//                 );
-//               } else {
-//                 res.redirect("/limit");
-//                 connection.release();
-//               }
-//             } else if (result[0].coupon && result[0].isExpired === "true") {
-//               req.session.coupon = [];
-//               res.redirect("/ad");
-//               connection.release();
-//             } else {
-//               res.redirect("/absent");
-//               connection.release();
-//             }
-//           }
-//         });
-//       });
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
 router.get("/index/:coupon", (req, res, next) => {
   let coupon = req.params.coupon;
-
   try {
     getQuery = "SELECT * FROM coupons WHERE coupon = ?";
     postQuery = "UPDATE coupons SET scans = ? WHERE coupon = ?";
 
+    // if the coupon length is invalid redirect to absent page
     if (coupon.length !== 6) {
       res.redirect("/absent");
     } else {
+      // get db connection
       db.getConnection(async (err, connection) => {
         if (err) throw err;
+        // get coupon data from coupon table that matches the coupon in the url
         await connection.query(getQuery, [coupon], async (err, result) => {
+          if (err) throw err;
           if (result === null || result.length === 0) {
+            // redirect to absent if there is no coupon like that in the db
             res.redirect("/absent");
             connection.release();
           } else {
-            if (result[0].coupon && result[0].isExpired === "false") {
+            // if there is a coupon and it is not expired do the ff
+            if (result[0].coupon && result[0].isExpired == false) {
+              // check if the coupon hasn't been used more than 5 times
               if (result[0].scans <= 5) {
                 let scans = result[0].scans + 1;
+                // increment the scan value and update the coupon with it
                 await connection.query(
                   postQuery,
                   [scans, coupon],
                   (err, result) => {
                     if (err) throw err;
+                    // if the coupon is not already in session, add it to the session
                     if (typeof req.session.coupon == "undefined") {
                       req.session.coupon = [];
                       req.session.coupon = coupon;
                       res.redirect("/ad");
                     connection.release();
                     } else {
+                      // if the coupon is in the session update it with the new coupon details
                       req.session.coupon = coupon;
                       res.redirect("/ad");
                     connection.release();
@@ -101,10 +53,12 @@ router.get("/index/:coupon", (req, res, next) => {
                   }
                 );
               } else {
+              // if coupon has been used more than five times redirect to the limit page
                 res.redirect("/limit");
                 connection.release();
               }
-            } else if (result[0].coupon && result[0].isExpired === "true") {
+            } else if (result[0].coupon && result[0].isExpired == true) {
+              // if coupon is present but expired, delete coupon details and redirect to the add page
               req.session.coupon = [];
               res.redirect("/ad");
               connection.release();
@@ -127,12 +81,22 @@ router.get("/ad", (req, res, next) => {
 
 // GET win page
 router.get("/win", (req, res, next) => {
-  res.render("win", { title: "Winner" });
+  const coupon = req.session.coupon;
+  if (coupon === null || coupon === undefined){
+    res.render("absent", { title: "Wrong" });
+  } else {
+    res.render("win", { title: "Winner" });
+  }
 });
 
 // GET lose page
 router.get("/lose", (req, res, next) => {
-  res.render("lose", { title: "Sorry" });
+  const coupon = req.session.coupon;
+  if (coupon === null || coupon === undefined){
+    res.render("absent", { title: "Wrong" });
+  } else {
+    res.render("lose", { title: "Sorry" });
+  }
 });
 
 // GET early page
@@ -157,12 +121,17 @@ router.get("/expired", (req, res, next) => {
 
 //GET confirm page
 router.get("/confirm", (req, res, next) => {
-  res.render("confirm", { title: "OK", credit: 0 });
+  const coupon = req.session.coupon;
+  if (coupon === null || coupon === undefined){
+    res.render("absent", { title: "Wrong" });
+  } else {
+    res.render("confirm", { title: "OK", credit: 0 });
+  }
 });
 
 const couponGenerator = () => {
-  // set start and end time for the day
-  const startTime = DateTime.fromObject({ hour: 8 });
+  try{
+    const startTime = DateTime.fromObject({ hour: 8 });
   const endTime = DateTime.fromObject({ hour: 19 });
 
   const timeRange = endTime.diff(startTime);
@@ -232,12 +201,13 @@ const couponGenerator = () => {
       expirationTime DATETIME,
       isExpired VARCHAR(10),
       scans INT(1),
-      isRedeemed VARCHAR(10),
+      isRedeemed VARCHAR(10)
     )`;
     const postCouponQuery =
-      "INSERT INTO coupons (time, coupon, expirationTime,isExpired,scans) VALUES (?, ?, ? ,? ,? , ?)";
+      "INSERT INTO coupons (time, coupon, expirationTime,isExpired,scans,isRedeemed) VALUES (?, ?, ? , ? ,? , ?)";
 
     await connection.query(createTableQuery, async (err, result) => {
+      if (err) throw err;
       for (const pair of timeCouponPairs) {
         connection.query(postCouponQuery, [
           pair.time,
@@ -246,30 +216,35 @@ const couponGenerator = () => {
           isExpired,
           scans,
           isRedeemed,
-        ]);
+        ], (err)=>{
+          if (err) throw err;
+        });
       }
+      console.log("tokens generated and database updated!");
     });
-
-    const now = DateTime.now();
-    if (now.hour === 19) {
-      connection.query("UPDATE coupons SET isExpired = true");
-    }
-
-    res.send(timeCouponPairs);
     connection.release();
   });
+  } catch (err){
+    console.log(err);
+  }
+  // set start and end time for the day
 };
 
 const couponExpirer = () => {
-  const now = DateTime.now();
-
+  try{
+    isExpired = true;
   db.getConnection(async (err, connection) => {
     if (err) {
       throw err;
-    } else if (now.hour === 19) {
-      await connection.query("UPDATE coupons SET isExpired = true");
+    } else {
+      await connection.query(`UPDATE coupons SET isExpired = ${isExpired}`);
+      console.log("coupons expired!")
     }
+    connection.release();
   });
+  }catch (err) {
+    console.log(err);
+  }
 };
 
 // Schedule the task to run at 6am every day

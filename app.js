@@ -6,7 +6,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mysql = require("mysql");
 const session = require("express-session");
-const passport = require("passport");
 const MySqlStore = require("express-mysql-session")(session);
 const database_config = require("./config/database");
 
@@ -65,12 +64,15 @@ if (process.env.NODE_ENV === "development"){
 }
 
 //set routes
-var pagesRouter = require("./routes/pages");
-var usersRouter = require("./routes/users");
-
+const pagesRouter = require("./routes/pages");
+const usersRouter = require("./routes/users");
+const adminPagesRouter = require("./routes/admin_pages");
+const adminUsersRouter = require("./routes/admin_users")
 //routing or using routes set above
 app.use("/", pagesRouter);
 app.use("/users", usersRouter);
+app.use('/admin/dashboard', adminPagesRouter);
+app.use('/admin/dashboard', adminUsersRouter);
 
 
 // catch 404 and forward to error handler
